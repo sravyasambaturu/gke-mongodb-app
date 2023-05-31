@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gke-mongodb-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gke-mongodb-app
+  template:
+    metadata:
+      labels:
+        app: gke-mongodb-app
+    spec:
+      containers:
+        - name: gke-mongodb-app
+          image: gcr.io/<your-project-id>/gke-mongodb-app:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secrets
+                  key: mongo-uri
+
